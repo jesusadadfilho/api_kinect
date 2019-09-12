@@ -7,28 +7,33 @@ from rest_framework.views import APIView
 
 from rest_framework.response import Response
 
-from kinect.models import Paciente
-from kinect.serializer import PacienteSerializer
+from kinect.models import *
+from kinect.serializer import *
 
-
-"""class PacienteList(APIView):
+class PacienteList(APIView):
 
     def get(self, request):
         queryset = Paciente.objects.all()
         serializer_class = PacienteSerializer(queryset, many=True)
         return Response(serializer_class.data)
-"""
 
+class FisioterapeutaList(APIView):
 
-@api_view(['GET', 'POST'])
-def PacienteList(request):
-    if request.method == 'GET':
-        pacientes = Paciente.objects.all()
-        pacientes_serializer = PacienteSerializer(pacientes, many=True)
-        return Response(pacientes_serializer.data)
-    elif request.method == 'POST':
-        pacientes_serializer = PacienteSerializer(data=request.data)
-        if pacientes_serializer.is_valid():
-            pacientes_serializer.save()
-            return Response(pacientes_serializer.data, status=status.HTTP_201_CREATED)
-        return Response(pacientes_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request):
+        queryset = Fisioterapeuta.objects.all()
+        serializer_class = FisioterapeutaSerializer(queryset, many=True)
+        return Response(serializer_class.data)
+
+class ExercicioList(APIView):
+
+    def get(self, request):
+        queryset = Exercicio.objects.all()
+        serializer_class = ExercicioSerializer(queryset, many=True)
+        return Response(serializer_class.data)
+
+class TratamentoList(APIView):
+
+    def get(self, request):
+        queryset = Tratamento.objects.all()
+        serializer_class = TratamentoSerializer(queryset, many=True)
+        return Response(serializer_class.data)

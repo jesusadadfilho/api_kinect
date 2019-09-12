@@ -19,5 +19,9 @@ from kinect.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('pacientes/', PacienteList.as_view())
+    path('pacientes/', PacienteList.as_view()),
+    path('fisioterapeutas/', FisioterapeutaList.as_view()),
+    path('exercicios/', ExercicioList.as_view()),
+    path('tratamentos/', TratamentoList.as_view()),
+
 ]
