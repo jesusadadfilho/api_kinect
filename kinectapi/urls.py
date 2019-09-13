@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from kinect.views import *
+from django.urls import path
+from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,5 +25,6 @@ urlpatterns = [
     path('fisioterapeutas/', FisioterapeutaList.as_view()),
     path('exercicios/', ExercicioList.as_view()),
     path('tratamentos/', TratamentoList.as_view()),
+    path('get-token/', obtain_auth_token),
 
 ]

@@ -4,6 +4,7 @@ from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated #<< Adicionar como permission_classes de uma view para ver apenas quando autenticado
 
 from rest_framework.response import Response
 
@@ -25,6 +26,8 @@ class FisioterapeutaList(APIView):
         return Response(serializer_class.data)
 
 class ExercicioList(APIView):
+#Tem que ter essa vírgula no final se for só uma classe, senão o Django reconhece como String, e não como Tuple
+    permission_classes = IsAuthenticated,
 
     def get(self, request):
         queryset = Exercicio.objects.all()
