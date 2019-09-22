@@ -23,8 +23,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('pacientes/', PacienteList.as_view()),
     path('fisioterapeutas/', FisioterapeutaList.as_view()),
+    path('fisioterapeutas/<int:pk>', FisioterapeutaDetail.as_view()),
+    path('fisioterapeutas/<int:fisioid>/sessoes', FisioterapeutaSessoes.as_view()), #Em teste
+    path('pacientes/<int:pacid>/sessoes', PacienteSessoes.as_view()), #Em teste
     path('exercicios/', ExercicioList.as_view()),
     path('tratamentos/', TratamentoList.as_view()),
     path('get-token/', obtain_auth_token),
+    path('achar-sessoes-paciente/', PacienteSessoes.as_view())
 
 ]

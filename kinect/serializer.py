@@ -6,36 +6,36 @@ from kinect.models import *
 
 class PacienteSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(read_only=True, slug_field="username")
-    class meta:
+    class Meta:
         model = Paciente
-        fields =('id', 'nome', 'telefone', 'cpf', 'dt_nascimento', 'historico', 'genero')
+        fields =('id', 'user', 'nome', 'telefone', 'cpf', 'dt_nascimento', 'historico', 'genero')
 
 class FisioterapeutaSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(read_only=True, slug_field="username")
-    class meta:
+    class Meta:
         model = Fisioterapeuta
-        fields =('id', 'nome', 'telefone', 'clinica', 'descricao', 'crm', 'dt_nascimento')
+        fields =('id', 'user', 'nome', 'telefone', 'clinica', 'descricao', 'crm', 'dt_nascimento')
 
 class ExercicioSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(read_only=True, slug_field="username")
-    class meta:
+    class Meta:
         model = Exercicio
-        fields =('id', 'nome', 'parteDoCorpo')
+        fields =('id', 'user', 'nome', 'parteDoCorpo')
 
 class TratamentoSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(read_only=True, slug_field="username")
-    class meta:
+    class Meta:
         model = Tratamento
-        fields =('id', 'fisioterapeuta', 'paciente', 'condicao', 'avaliacao')
+        fields =('id', 'user', 'fisioterapeuta', 'paciente', 'condicao', 'avaliacao')
 
 class SessaoSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(read_only=True, slug_field="username")
-    class meta:
+    class Meta:
         model = Sessao
-        fields =('id', 'dt_realizada', 'paciente', 'tratamento', 'exercicio')
+        fields =('id', 'user', 'dt_realizada', 'paciente', 'tratamento', 'exercicio')
 
 class TempoSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(read_only=True, slug_field="username")
-    class meta:
+    class Meta:
         model = Tempo
         fields =('id', 'sessao', 'tempo')

@@ -45,4 +45,4 @@ class Sessao(models.Model):
 
 class Tempo(models.Model):
     sessao = models.ForeignKey(Sessao, related_name='tempos', on_delete=models.DO_NOTHING)
-    tempo = models.TimeField()
+    tempo = models.TextField()
