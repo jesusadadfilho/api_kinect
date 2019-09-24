@@ -35,18 +35,26 @@ class FisioterapeutaDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = FisioterapeutaSerializer
 
 
-# Em teste
 class FisioterapeutaSessoes(APIView):
     def get(self, request, fisioid):
         fisio = Fisioterapeuta.objects.get(id=fisioid)
-        tratamentos = Tratamento.objects.filter(fisioterapeuta=fisio)
-        #queryset = Sessao.objects.filter(tratamento=Subquery(tratamentos))
         s = []
         queryset = Sessao.objects.all()
         for i in queryset:
             if i.tratamento.fisioterapeuta == fisio:
                 s.append(i)
         serializer_class = SessaoSerializer(s, many=True)
+        return Response(serializer_class.data)
+
+class FisioterapeutaPacientes(APIView):
+    def get(self, request, fisioid):
+        fisio = Fisioterapeuta.objects.get(id=fisioid)
+        tratamentos = Tratamento.objects.filter(fisioterapeuta=fisio)
+        p = []
+        for i in tratamentos:
+            if i.paciente not in p:
+                p.append(i.paciente)
+        serializer_class = PacienteSerializer(p, many=True)
         return Response(serializer_class.data)
 
 
