@@ -30,6 +30,7 @@ urlpatterns = [
     path('exercicios/', ExercicioList.as_view()),
     path('tratamentos/', TratamentoList.as_view()),
     path('get-token/', obtain_auth_token),
-    path('achar-sessoes-paciente/', PacienteSessoes.as_view())
+    path('achar-sessoes-paciente/', PacienteSessoes.as_view()),
+    path('populardb/', PopularDB.as_view()),
 
 ]

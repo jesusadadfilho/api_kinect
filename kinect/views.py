@@ -83,3 +83,61 @@ class PacienteSessoes(APIView):
         queryset = paciente.sessoes.all()
         serializer_class = SessaoSerializer(queryset, many=True)
         return Response(serializer_class.data)
+
+class PopularDB(APIView):
+    def get(self, request):
+        try:
+            userfisio1 = User.objects.create_user(username='fisio1', password='fisio1', email= 'fisio1@teste.com')#Fisioterapeuta1User
+            userfisio2 = User.objects.create_user(username='fisio2', password='fisio2', email= 'fisio2@teste.com')#Fisioterapeuta2User
+            userpac1 = User.objects.create_user(username='pac1', password='pac1', email='pac1@teste.com')#Paciente1User
+            userpac2 = User.objects.create_user(username='pac2', password='pac2', email='pac2@teste.com')#Paciente2User
+            userpac3 = User.objects.create_user(username='pac3', password='pac3', email='pac3@teste.com')#Paciente3User
+            try:
+                fisio1 = Fisioterapeuta(nome='Fisio1', clinica='Teste', crm='Teste', telefone='Teste',
+                                        descricao='Teste', dt_nascimento='2000-01-01', user=userfisio1)
+                fisio2 = Fisioterapeuta(nome='Fisio2', clinica='Teste', crm='Teste', telefone='Teste',
+                                        descricao='Teste', dt_nascimento='2000-01-01', user=userfisio2)
+                pac1 = Paciente(nome='Paciente1', cpf='Teste', telefone='Teste', historico='Teste',
+                                dt_nascimento='2000-01-01', genero='M', user=userpac1)
+                pac2 = Paciente(nome='Paciente2', cpf='Teste', telefone='Teste', historico='Teste',
+                                dt_nascimento='2000-01-01', genero='M', user=userpac2)
+                pac3 = Paciente(nome='Paciente3', cpf='Teste', telefone='Teste', historico='Teste',
+                                dt_nascimento='2000-01-01', genero='F', user=userpac3)
+                fisio1.save()
+                fisio2.save()
+                pac1.save()
+                pac2.save()
+                pac3.save()
+                t1 = Tratamento(fisioterapeuta=fisio1, paciente=pac1, condicao='Teste', avaliacao='Teste')
+                t2 = Tratamento(fisioterapeuta=fisio1, paciente=pac1, condicao='Teste', avaliacao='Teste')
+                t3 = Tratamento(fisioterapeuta=fisio2, paciente=pac2, condicao='Teste', avaliacao='Teste')
+                t4 = Tratamento(fisioterapeuta=fisio1, paciente=pac3, condicao='Teste', avaliacao='Teste')
+                t5 = Tratamento(fisioterapeuta=fisio2, paciente=pac3, condicao='Teste', avaliacao='Teste')
+                t1.save()
+                t2.save()
+                t3.save()
+                t4.save()
+                t5.save()
+                e1 = Exercicio(nome='Teste1', partedocorpo='Teste1')
+                e2 = Exercicio(nome='Teste2', partedocorpo='Teste2')
+                e1.save()
+                e2.save()
+                s1 = Sessao(paciente=pac1, tratamento=t1, dt_realizada='2000-01-01', exercicio=e1)
+                s2 = Sessao(paciente=pac1, tratamento=t2, dt_realizada='2000-01-01', exercicio=e1)
+                s3 = Sessao(paciente=pac2, tratamento=t3, dt_realizada='2000-01-01', exercicio=e2)
+                s4 = Sessao(paciente=pac3, tratamento=t4, dt_realizada='2000-01-01', exercicio=e2)
+                s5 = Sessao(paciente=pac3, tratamento=t5, dt_realizada='2000-01-01', exercicio=e1)
+                s6 = Sessao(paciente=pac3, tratamento=t5, dt_realizada='2000-01-01', exercicio=e1)
+                s1.save()
+                s2.save()
+                s3.save()
+                s4.save()
+                s5.save()
+                s6.save()
+                return request
+            except:
+                print("Erro na criação dos objetos")
+        except:
+            print("Erro na criacao dos usuários(Talvez já existam)")
+        return 'N deu certo'
+
