@@ -32,10 +32,10 @@ class SessaoSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(read_only=True, slug_field="username")
     class Meta:
         model = Sessao
-        fields =('id', 'user', 'dt_realizada', 'paciente', 'tratamento', 'exercicio')
+        fields =('id', 'user', 'dt_realizada', 'tratamento', 'exercicio')
 
 class TempoSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(read_only=True, slug_field="username")
     class Meta:
         model = Tempo
-        fields =('id', 'sessao', 'tempo')
+        fields =('id', 'user', 'sessao', 'tempo')

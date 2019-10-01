@@ -38,7 +38,7 @@ class Tratamento(models.Model):
 
 class Sessao(models.Model):
     dt_realizada = models.DateTimeField(auto_now_add=True)
-    paciente = models.ForeignKey(Paciente, related_name='sessoes', on_delete=models.DO_NOTHING)
+    #paciente = models.ForeignKey(Paciente, related_name='sessoes', on_delete=models.DO_NOTHING)
     tratamento = models.ForeignKey(Tratamento, related_name='sessoes', on_delete=models.DO_NOTHING)
     exercicio = models.ForeignKey(Exercicio, related_name='sessoes', on_delete=models.DO_NOTHING)
 

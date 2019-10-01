@@ -32,5 +32,7 @@ urlpatterns = [
     path('get-token/', obtain_auth_token),
     path('achar-sessoes-paciente/', PacienteSessoes.as_view()),
     path('populardb/', PopularDB.as_view()),
+    path('makesessao/<int:tratid>/<int:exerid>', MakeSessao.as_view()),
+    path('maketempo/<int:sessaoid>', MakeTempo.as_view()),
 
 ]
