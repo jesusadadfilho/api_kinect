@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'kinect/formstyles.css' %}">
+</head>
+<body>
+<h1 class="header">Cadastrar novo Fisioterapeuta</h1>
+<form action="/cadastrofisio" method="post">
+    {% csrf_token %}
+    <!--{{ form }}-->
+    <div class="fieldWrapper">
+        <label for="{{form.nome.id_for_label}}">Nome: </label>
+        {{form.nome}}
+    </div>
+    <div class="fieldWrapper">
+        <label for="{{form.clinica.id_for_label}}">Clínica: </label>
+        {{form.clinica}}
+    </div>
+    <div class="fieldWrapper">
+        <label for="{{form.crm.id_for_label}}">CRM: </label>
+        {{form.crm}}
+    </div>
+    <div class="fieldWrapper">
+        <label for="{{form.descricao.id_for_label}}">Descrição: </label>
+        {{form.descricao}}
+    </div>
+    <div class="fieldWrapper">
+        <label for="{{form.telefone.id_for_label}}">Telefone: </label>
+        {{form.telefone}}
+    </div>
+    <div class="fieldWrapper">
+        <label for="{{form.dt_nasc.id_for_label}}">Data de Nascimento: </label>
+        {{form.dt_nascimento}}
+    </div>
+    <div class="fieldWrapper">
+        <label for="{{form.email.id_for_label}}">Email: </label>
+        {{form.email}}
+    </div>
+    <div class="fieldWrapper">
+        <label for="{{form.username.id_for_label}}">Usuário: </label>
+        {{form.username}}
+    </div>
+    <div class="fieldWrapper">
+        <label for="{{form.password.id_for_label}}">Senha: </label>
+        {{form.password}}
+    </div>
+    <input type="submit" value="Cadastrar">
+</form>
+</body>
+</html>

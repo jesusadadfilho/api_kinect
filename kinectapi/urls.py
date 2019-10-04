@@ -15,24 +15,25 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+
+from kinect import views
 from kinect.views import *
 from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('pacientes/', PacienteList.as_view()),
-    path('fisioterapeutas/', FisioterapeutaList.as_view()),
-    path('fisioterapeutas/<int:pk>', FisioterapeutaDetail.as_view()),
-    path('fisioterapeutas/<int:fisioid>/sessoes', FisioterapeutaSessoes.as_view()),
-    path('fisioterapeutas/<int:fisioid>/pacientes', FisioterapeutaPacientes.as_view()),
-    path('pacientes/<int:pacid>/sessoes', PacienteSessoes.as_view()),
-    path('exercicios/', ExercicioList.as_view()),
-    path('tratamentos/', TratamentoList.as_view()),
+    path('pacientes/', PacienteList.as_view(), name='pacientelist'),
+    path('fisioterapeutas/', FisioterapeutaList.as_view(), name='fisioterapeutalist'),
+    path('fisioterapeutas/<int:pk>', FisioterapeutaDetail.as_view(), name='fisioterapeutadetail'),
+    path('fisioterapeutas/<int:fisioid>/sessoes', FisioterapeutaSessoes.as_view(), name='fisiosessoes'),
+    path('fisioterapeutas/<int:fisioid>/pacientes', FisioterapeutaPacientes.as_view(), name='fisiopacientes'),
+    path('pacientes/<int:pacid>/sessoes', PacienteSessoes.as_view(), name='pacientesessoes'),
+    path('exercicios/', ExercicioList.as_view(), name='exerciciolist'),
+    path('tratamentos/', TratamentoList.as_view(), name='tratamentolist'),
     path('get-token/', obtain_auth_token),
-    path('achar-sessoes-paciente/', PacienteSessoes.as_view()),
     path('populardb/', PopularDB.as_view()),
-    path('makesessao/<int:tratid>/<int:exerid>', MakeSessao.as_view()),
-    path('maketempo/<int:sessaoid>', MakeTempo.as_view()),
-
+    path('makesessao/<int:tratid>/<int:exerid>', MakeSessao.as_view(), name='makesessao'),
+    path('maketempo/<int:sessaoid>', MakeTempo.as_view(), name='maketempo'),
+    path('cadastrofisio', views.cadastrofisio, name='cadastrofisio'),
 ]

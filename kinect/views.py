@@ -1,7 +1,9 @@
 from django.db.models import Subquery
+from django.http import HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
+from django.template import loader
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
@@ -10,6 +12,8 @@ from rest_framework.permissions import \
 from rest_framework import generics
 from rest_framework.response import Response
 from datetime import datetime
+
+from kinect.forms import *
 from kinect.models import *
 from kinect.serializer import *
 
@@ -85,6 +89,7 @@ class PacienteSessoes(APIView):
         serializer_class = SessaoSerializer(queryset, many=True)
         return Response(serializer_class.data)
 
+
 class MakeSessao(APIView):
     def post(self, request, tratid, exerid):
         tratamento = Tratamento.objects.get(id=tratid)
@@ -94,6 +99,7 @@ class MakeSessao(APIView):
         serializer_class = SessaoSerializer(sessao, many=False)
         return Response(serializer_class.data)
 
+
 class MakeTempo(APIView):
     def post(self, request, sessaoid):
         tempo = datetime.now()
@@ -102,6 +108,29 @@ class MakeTempo(APIView):
         tempo.save()
         serializer_class = TempoSerializer(tempo, many=False)
         return Response(serializer_class.data)
+
+
+def cadastrofisio(request):
+    lista = Fisioterapeuta.objects.all()
+    if request.method == 'POST':
+        form = FisioterapeutaForm(request.POST)
+        if form.is_valid():
+            form.clean()
+            user = User.objects.create_user(username=form.cleaned_data['username'], password=form.cleaned_data['password'], email=form.cleaned_data['email'])
+            fisio = Fisioterapeuta(nome=form.cleaned_data['nome'],
+                                   clinica=form.cleaned_data['clinica'],
+                                   crm=form.cleaned_data['crm'],
+                                   descricao=form.cleaned_data['descricao'],
+                                   telefone=form.cleaned_data['telefone'],
+                                   dt_nascimento=form.cleaned_data['dt_nascimento'],
+                                   user=user)
+            fisio.save()
+            return HttpResponse("Fisioterapeuta cadastrado.")
+    else:
+        form = FisioterapeutaForm()
+        context = {'lista': lista}
+        return render(request, 'cadastrofisio.html', {'form':form})
+
 
 class PopularDB(APIView):
     def post(self, request):
