@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'kinect/formstyles.css' %}">
+</head>
+<body>
+<h1 class="header">Cadastrar novo Tratamento</h1>
+<form action="/registrartratamento" method="post">
+    {% csrf_token %}
+    <!--{{ form }}-->
+    <div class="fieldWrapper">
+        <label for="{{form.fisioterapeuta.id_for_label}}">Fisioterapeuta: </label>
+        {{form.fisioterapeuta}}
+    </div>
+    <div class="fieldWrapper">
+        <label for="{{form.paciente.id_for_label}}">Paciente: </label>
+        {{form.paciente}}
+    </div>
+    <div class="fieldWrapper">
+        <label for="{{form.condicao.id_for_label}}">Condição: </label>
+        {{form.condicao}}
+    </div>
+    <input type="submit" value="Cadastrar">
+</form>
+</body>
+</html>

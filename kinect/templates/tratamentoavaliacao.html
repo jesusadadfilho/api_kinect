@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'kinect/formstyles.css' %}">
+</head>
+<body>
+<h1 class="header">Adicionar avaliação a um tratamento</h1>
+<form action="/registraravaliacaotratamento" method="post">
+    {% csrf_token %}
+    <!--{{ form }}-->
+    <div class="fieldWrapper">
+        <label for="{{form.tratamentoid.id_for_label}}">ID do Tratamento: </label>
+        {{form.tratamentoid}}
+    </div>
+    <div class="fieldWrapper">
+        <label for="{{form.avaliacao.id_for_label}}">Avaliação: </label>
+        {{form.avaliacao}}
+    </div>
+    <input type="submit" value="Cadastrar">
+</form>
+</body>
+</html>

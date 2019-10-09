@@ -13,6 +13,9 @@ class Fisioterapeuta(models.Model):
     dt_nascimento = models.DateField()
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="fisioterapeuta", default=None)
 
+    def __str__(self):
+        return self.nome
+
 
 class Paciente(models.Model):
     nome = models.CharField(max_length=100)
@@ -23,10 +26,16 @@ class Paciente(models.Model):
     genero = models.CharField(max_length=1, default="M")
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="paciente", default=None)
 
+    def __str__(self):
+        return self.nome
+
 
 class Exercicio(models.Model):
     nome = models.CharField(max_length=100)
     parteDoCorpo = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.nome
 
 
 class Tratamento(models.Model):

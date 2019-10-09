@@ -35,5 +35,10 @@ urlpatterns = [
     path('populardb/', PopularDB.as_view()),
     path('makesessao/<int:tratid>/<int:exerid>', MakeSessao.as_view(), name='makesessao'),
     path('maketempo/<int:sessaoid>', MakeTempo.as_view(), name='maketempo'),
-    path('cadastrofisio', views.cadastrofisio, name='cadastrofisio'),
+    path('cadastrofisio', CadastroFisio.as_view(), name='cadastrofisio'),
+    path('cadastropaciente', CadastroPaciente.as_view(), name='cadastropaciente'),
+    path('registrarexercicio', RegistrarExercicio.as_view(), name='registrarexercicio'),
+    path('registrartratamento', RegistrarTratamento.as_view(), name='registrartratamento'),
+    path('registraravaliacaotratamento', RegistrarAvaliacaoTratamento.as_view(), name='registraravaliacaotratamento'),
+
 ]

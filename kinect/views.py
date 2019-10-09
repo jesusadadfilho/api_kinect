@@ -110,9 +110,8 @@ class MakeTempo(APIView):
         return Response(serializer_class.data)
 
 
-def cadastrofisio(request):
-    lista = Fisioterapeuta.objects.all()
-    if request.method == 'POST':
+class CadastroFisio(APIView):
+    def post(self, request):
         form = FisioterapeutaForm(request.POST)
         if form.is_valid():
             form.clean()
@@ -126,10 +125,77 @@ def cadastrofisio(request):
                                    user=user)
             fisio.save()
             return HttpResponse("Fisioterapeuta cadastrado.")
-    else:
+        else:
+            return HttpResponse("Algo deu errado.")
+    def get(self, request):
         form = FisioterapeutaForm()
-        context = {'lista': lista}
         return render(request, 'cadastrofisio.html', {'form':form})
+
+class CadastroPaciente(APIView):
+    def post(self, request):
+        form = PacienteForm(request.POST)
+        if form.is_valid():
+            form.clean()
+            user = User.objects.create_user(username=form.cleaned_data['username'],
+                                            password=form.cleaned_data['password'], email=form.cleaned_data['email'])
+            paciente = Paciente(nome=form.cleaned_data['nome'],
+                                   cpf=form.cleaned_data['cpf'],
+                                   genero=form.cleaned_data['genero'],
+                                   historico=form.cleaned_data['historico'],
+                                   telefone=form.cleaned_data['telefone'],
+                                   dt_nascimento=form.cleaned_data['dt_nascimento'],
+                                   user=user)
+            paciente.save()
+            return HttpResponse("Paciente cadastrado.")
+        else:
+            return HttpResponse("Algo deu errado.")
+    def get(self, request):
+        form = PacienteForm()
+        return render(request, 'cadastropaciente.html', {'form': form})
+
+class RegistrarExercicio(APIView):
+    def post(self, request):
+        form = ExercicioForm(request.POST)
+        if form.is_valid():
+            form.clean()
+            exercicio = Exercicio(nome=form.cleaned_data['nome'], parteDoCorpo=form.cleaned_data['parteDoCorpo'])
+            exercicio.save()
+            return HttpResponse("Exercício registrado com sucesso.")
+        else:
+            return HttpResponse("Algo deu errado.")
+    def get(self, request):
+        form = ExercicioForm()
+        return render(request, 'registrarexercicio.html', {'form':form})
+
+class RegistrarTratamento(APIView):
+    def post(self, request):
+        form = TratamentoForm(request.POST)
+        if form.is_valid():
+            form.clean()
+            tratamento = Tratamento(fisioterapeuta=form.cleaned_data['fisioterapeuta'], paciente=form.cleaned_data['paciente'], condicao=form.cleaned_data['condicao'])
+            tratamento.save()
+            responsestring = "Tratamento registrado com sucesso.\nO código do tratamento é:"+str(tratamento.id)
+            return HttpResponse(responsestring)
+        else:
+            return HttpResponse("Algo deu errado.")
+    def get(self, request):
+        form = TratamentoForm()
+        return render(request, 'registrartratamento.html', {'form':form})
+
+class RegistrarAvaliacaoTratamento(APIView):
+    def post(self, request):
+        form = AvaliacaoForm(request.POST)
+        if form.is_valid():
+            form.clean()
+            tratamento = Tratamento.objects.get(id=form.cleaned_data['tratamentoid'])
+            tratamento.avaliacao = form.cleaned_data['avaliacao']
+            tratamento.save(update_fields=['avaliacao'])
+            return HttpResponse("Tratamento atualizado com sucesso.")
+        else:
+            return HttpResponse("Algo deu errado.")
+    def get(self, request):
+        form = AvaliacaoForm()
+        return render(request, 'tratamentoavaliacao.html', {'form':form})
 
 
 class PopularDB(APIView):
