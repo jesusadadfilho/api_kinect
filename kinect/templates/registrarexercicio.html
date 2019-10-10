@@ -1,25 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'kinect/formstyles.css' %}">
-</head>
-<body>
-<h1 class="header">Cadastrar novo Exercício</h1>
-<form action="/registrarexercicio" method="post">
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <form method="post">
     {% csrf_token %}
-    <!--{{ form }}-->
-    <div class="fieldWrapper">
-        <label for="{{form.nome.id_for_label}}">Nome do exercício: </label>
-        {{form.nome}}
-    </div>
-    <div class="fieldWrapper">
-        <label for="{{form.parteDoCorpo.id_for_label}}">Parte do corpo atuante: </label>
-        {{form.parteDoCorpo}}
-    </div>
-    <input type="submit" value="Cadastrar">
-</form>
-</body>
-</html>
+      <h1 class="mt-2">Registrar Exercício</h1>
+      <hr class="mt-0 mb-4">
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-success">Registrar</button>
+  </form>
+{% endblock %}

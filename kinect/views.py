@@ -1,6 +1,7 @@
+from django.contrib.auth import authenticate, login, logout
 from django.db.models import Subquery
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.template import loader
@@ -197,6 +198,49 @@ class RegistrarAvaliacaoTratamento(APIView):
         form = AvaliacaoForm()
         return render(request, 'tratamentoavaliacao.html', {'form':form})
 
+class LoginFisio(APIView):
+    def post(self, request):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            form.clean()
+            user = authenticate(username=form.cleaned_data['username'],password=form.cleaned_data['password'])
+            if user is not None:
+                for fisio in Fisioterapeuta.objects.all():
+                    if fisio.user == user:
+                        login(request, user)
+                        return redirect('indexfisio')
+                return HttpResponse("Usuário não é Fisioterapeuta.")
+            return HttpResponse("Usuário não encontrado.")
+        else:
+            return render(request, 'loginfisio.html', {'form': form})
+    def get(self, request):
+        form = LoginForm()
+        return render(request, 'loginfisio.html', {'form': form})
+
+class LoginPaciente(APIView):
+    def post(self, request):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            form.clean()
+            user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            if user is not None:
+                for paciente in Paciente.objects.all():
+                    if paciente.user == user:
+                        login(request, user)
+                        return redirect('indexpaciente')
+                return HttpResponse("Usuário não é Fisioterapeuta.")
+            return HttpResponse("Usuário não encontrado.")
+        else:
+            return render(request, 'loginpaciente.html', {'form': form})
+
+    def get(self, request):
+        form = LoginForm()
+        return render(request, 'loginpaciente.html', {'form': form})
+
+class LogoutView(APIView):
+    def get(self, request):
+        logout(request)
+        return redirect('index')
 
 class PopularDB(APIView):
     def post(self, request):

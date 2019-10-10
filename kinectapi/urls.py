@@ -15,14 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.views.generic import TemplateView
 
 from kinect import views
 from kinect.views import *
 from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', TemplateView.as_view(template_name='index.html'), name='index'),
     path('pacientes/', PacienteList.as_view(), name='pacientelist'),
     path('fisioterapeutas/', FisioterapeutaList.as_view(), name='fisioterapeutalist'),
     path('fisioterapeutas/<int:pk>', FisioterapeutaDetail.as_view(), name='fisioterapeutadetail'),
@@ -40,5 +43,10 @@ urlpatterns = [
     path('registrarexercicio', RegistrarExercicio.as_view(), name='registrarexercicio'),
     path('registrartratamento', RegistrarTratamento.as_view(), name='registrartratamento'),
     path('registraravaliacaotratamento', RegistrarAvaliacaoTratamento.as_view(), name='registraravaliacaotratamento'),
+    path('loginfisio', LoginFisio.as_view(), name='loginfisio'),
+    path('loginpaciente', LoginPaciente.as_view(), name='loginpaciente'),
+    path('logout', LogoutView.as_view(), name='logout'),
+    path('indexfisio', TemplateView.as_view(template_name='indexfisio.html'), name='indexfisio'),
+    path('indexpaciente', TemplateView.as_view(template_name='indexpaciente.html'), name='indexpaciente'),
 
 ]

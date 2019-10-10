@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'kinect/css/bootstrap.min.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <div class="p-5"><h2 class="display-2">KinectRehab API</h2></div>
+                <div class="">
+                    <a href="{% url 'loginfisio' %}" class="btn btn-info text-center btn-block" role="button">Fazer login como Fisioterapeuta</a>
+                    <a href="{% url 'loginpaciente' %}" class="btn btn-info text-center btn-block" role="button">Fazer login como Paciente</a>
+                </div>
+            </div>
+          </div>
+    </div>
+</body>
+</html>

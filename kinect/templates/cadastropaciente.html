@@ -1,53 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'kinect/formstyles.css' %}">
-</head>
-<body>
-<h1 class="header">Cadastrar novo Paciente</h1>
-<form action="/cadastropaciente" method="post">
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <form method="post">
     {% csrf_token %}
-    <!--{{ form }}-->
-    <div class="fieldWrapper">
-        <label for="{{form.nome.id_for_label}}">Nome: </label>
-        {{form.nome}}
-    </div>
-    <div class="fieldWrapper">
-        <label for="{{form.cpf.id_for_label}}">CPF: </label>
-        {{form.cpf}}
-    </div>
-    <div class="fieldWrapper">
-        <label for="{{form.historico.id_for_label}}">Histórico: </label>
-        {{form.historico}}
-    </div>
-    <div class="fieldWrapper">
-        <label for="{{form.genero.id_for_label}}">Gênero: </label>
-        {{form.genero}}
-    </div>
-    <div class="fieldWrapper">
-        <label for="{{form.telefone.id_for_label}}">Telefone: </label>
-        {{form.telefone}}
-    </div>
-    <div class="fieldWrapper">
-        <label for="{{form.dt_nasc.id_for_label}}">Data de Nascimento: </label>
-        {{form.dt_nascimento}}
-    </div>
-    <div class="fieldWrapper">
-        <label for="{{form.email.id_for_label}}">Email: </label>
-        {{form.email}}
-    </div>
-    <div class="fieldWrapper">
-        <label for="{{form.username.id_for_label}}">Usuário: </label>
-        {{form.username}}
-    </div>
-    <div class="fieldWrapper">
-        <label for="{{form.password.id_for_label}}">Senha: </label>
-        {{form.password}}
-    </div>
-    <input type="submit" value="Cadastrar">
-</form>
-</body>
-</html>
+      <h1 class="mt-2">Cadastrar Paciente</h1>
+      <hr class="mt-0 mb-4">
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-success">Cadastrar</button>
+  </form>
+{% endblock %}

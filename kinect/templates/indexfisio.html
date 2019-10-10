@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+      <h1 class="mt-2">Menu Principal - Fisioterapeuta</h1>
+      <hr class="mt-0 mb-4">
+      <div class="container">
+        <p>Seja bem vindo ao sistema da KinectRehab!</p>
+        <p>Selecione uma ação:</p>
+        <ul>
+          <li><a href="{% url 'registrartratamento' %}">Registrar um novo tratamento</a></li>
+          <li><a href="{% url 'registraravaliacaotratamento' %}">Adicionar avaliação a um tratamento</a></li>
+          <li><a href="{% url 'registrarexercicio' %}"></a>Registrar um novo exercício</li>
+        </ul>
+      </div>
+    <button type="submit" class="btn btn-success">Login</button>
+  </form>
+{% endblock %}
