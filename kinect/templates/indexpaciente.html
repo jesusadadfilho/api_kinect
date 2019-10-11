@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+      <h1 class="mt-2">Menu Principal - Paciente</h1>
+      <hr class="mt-0 mb-4">
+      <div class="container">
+        <p>Seja bem vindo ao sistema da KinectRehab!</p>
+        <p>Selecione uma ação:</p>
+        <ul>
+          <li><a href="{% url 'pacientetratamentos' %}">Ver meus tratamentos</a></li>
+        </ul>
+      </div>
+  </form>
+{% endblock %}

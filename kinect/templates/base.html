@@ -16,7 +16,7 @@
             <div class="col-md-4"></div>
             <div class="float-md-right">
                 {% if user.is_authenticated %}
-                    Você está logado como: {{ user.username }}
+                    Você está logado como: {{ user.first_name }}
                     <p><a href="{% url 'logout' %}">Log Out</a></p>
                 {% else %}
                     <p>Você não está logado.</p>

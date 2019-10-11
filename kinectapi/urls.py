@@ -48,6 +48,6 @@ urlpatterns = [
     path('logout', LogoutView.as_view(), name='logout'),
     path('indexfisio', TemplateView.as_view(template_name='indexfisio.html'), name='indexfisio'),
     path('indexpaciente', TemplateView.as_view(template_name='indexpaciente.html'), name='indexpaciente'),
-    path('fisiotratamentos', TemplateView.as_view(template_name='fisiotratamentos.html'), name='fisiotratamentos'),
-
+    path('fisiotratamentos', FisioTratamentos.as_view(), name='fisiotratamentos'),
+    path('pacientetratamentos', PacienteTratamentos.as_view(), name='pacientetratamentos'),
 ]

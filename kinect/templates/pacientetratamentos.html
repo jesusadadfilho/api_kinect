@@ -5,13 +5,12 @@
   <hr class="mt-0 mb-4">
   <div class="container">
     {% if list %}
-      Você é responsável por {{ list|length }} tratamentos:
+      Você está cadastrado em {{ list|length }} tratamentos:
       {% for t in list %}
         <div class="card-body">
-          <h4 class="card-title">{{t.paciente.nome}}</h4>
+          <h4 class="card-title">{{t.fisioterapeuta.nome}}</h4>
           <p class="card-text">{{t.condicao}}</p>
           <a href="#" class="card-link">Detalhes</a>
-          <a href="#" class="card-link">Adicionar avaliação</a>
         </div>
       {% endfor %}
     {% else %}

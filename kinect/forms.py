@@ -4,7 +4,8 @@ from kinect.models import *
 
 
 class FisioterapeutaForm(forms.Form):
-    nome = forms.CharField(label='Nome:', max_length=100)
+    nome = forms.CharField(label='Nome', max_length=100)
+    sobrenome = forms.CharField(label='Sobrenome', max_length=100)
     clinica = forms.CharField(label='Clínica', max_length=30)
     descricao = forms.CharField(label='Descrição', max_length=30)
     telefone = forms.CharField(label='Telefone', max_length=20, widget=forms.NumberInput())
@@ -17,6 +18,7 @@ class FisioterapeutaForm(forms.Form):
 class PacienteForm(forms.Form):
     GENDER_CHOICES = [('M', 'Masculino'), ('F', 'Feminino')]
     nome = forms.CharField(label='Nome',max_length=100)
+    sobrenome = forms.CharField(label='Sobrenome', max_length=100)
     telefone = forms.CharField(label='Telefone',max_length=20)
     cpf = forms.CharField(label='CPF', max_length=20, widget=forms.NumberInput())
     dt_nascimento = forms.DateField(label='Data de Nascimento (dia-mês-ano)', widget=forms.DateInput())

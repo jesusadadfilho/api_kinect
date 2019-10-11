@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Subquery
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 from django.template import loader
@@ -82,7 +82,6 @@ class TratamentoList(APIView):
         return Response(serializer_class.data)
 
 
-# Em teste
 class PacienteSessoes(APIView):
     def get(self, request, pacid):
         paciente = Paciente.objects.get(id=pacid)
@@ -116,8 +115,13 @@ class CadastroFisio(APIView):
         form = FisioterapeutaForm(request.POST)
         if form.is_valid():
             form.clean()
-            user = User.objects.create_user(username=form.cleaned_data['username'], password=form.cleaned_data['password'], email=form.cleaned_data['email'])
-            fisio = Fisioterapeuta(nome=form.cleaned_data['nome'],
+            user = User.objects.create_user(username=form.cleaned_data['username'],
+                                            password=form.cleaned_data['password'],
+                                            email=form.cleaned_data['email'],
+                                            first_name=form.cleaned_data['nome'],
+                                            last_name=form.cleaned_data['sobrenome'])
+            nomefull = form.cleaned_data['nome']+' '+form.cleaned_data['sobrenome']
+            fisio = Fisioterapeuta(nome=nomefull,
                                    clinica=form.cleaned_data['clinica'],
                                    crm=form.cleaned_data['crm'],
                                    descricao=form.cleaned_data['descricao'],
@@ -138,8 +142,12 @@ class CadastroPaciente(APIView):
         if form.is_valid():
             form.clean()
             user = User.objects.create_user(username=form.cleaned_data['username'],
-                                            password=form.cleaned_data['password'], email=form.cleaned_data['email'])
-            paciente = Paciente(nome=form.cleaned_data['nome'],
+                                            password=form.cleaned_data['password'],
+                                            email=form.cleaned_data['email'],
+                                            first_name=form.cleaned_data['nome'],
+                                            last_name=form.cleaned_data['sobrenome'])
+            nomefull = form.cleaned_data['nome'] + ' ' + form.cleaned_data['sobrenome']
+            paciente = Paciente(nome=nomefull,
                                    cpf=form.cleaned_data['cpf'],
                                    genero=form.cleaned_data['genero'],
                                    historico=form.cleaned_data['historico'],
@@ -228,7 +236,7 @@ class LoginPaciente(APIView):
                     if paciente.user == user:
                         login(request, user)
                         return redirect('indexpaciente')
-                return HttpResponse("Usuário não é Fisioterapeuta.")
+                return HttpResponse("Usuário não é Paciente.")
             return HttpResponse("Usuário não encontrado.")
         else:
             return render(request, 'loginpaciente.html', {'form': form})
@@ -245,13 +253,26 @@ class LogoutView(APIView):
 class FisioTratamentos(APIView):
     def get(self, request):
         if request.user.isAuthenticated():
-            fisio = Fisioterapeuta.objects.get(user=request.user)
+            currentuser = request.user
+            fisio = Fisioterapeuta.objects.get(user=currentuser)
             list = Tratamento.objects.filter(fisioterapeuta=fisio)
             return render(request, 'fisiotratamentos.html', {'list': list})
         else:
             return HttpResponse("Não deu certo")
 
 
+class PacienteTratamentos(APIView):
+    def get(self, request):
+        if request.user.isAuthenticated():
+            #fisio = Fisioterapeuta.objects.get(user=request.user)
+            fisio = Fisioterapeuta()
+            for f in Fisioterapeuta.objects.all():
+                if f.user.id==request.user.id:
+                    fisio = f
+            list = Tratamento.objects.filter(fisioterapeuta=fisio)
+            return render(request, 'pacientetratamentos.html', {'list': list})
+        else:
+            return HttpResponse("Não deu certo")
 
 class PopularDB(APIView):
     def post(self, request):
