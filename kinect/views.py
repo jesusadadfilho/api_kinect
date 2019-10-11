@@ -242,6 +242,17 @@ class LogoutView(APIView):
         logout(request)
         return redirect('index')
 
+class FisioTratamentos(APIView):
+    def get(self, request):
+        if request.user.isAuthenticated():
+            fisio = Fisioterapeuta.objects.get(user=request.user)
+            list = Tratamento.objects.filter(fisioterapeuta=fisio)
+            return render(request, 'fisiotratamentos.html', {'list': list})
+        else:
+            return HttpResponse("Não deu certo")
+
+
+
 class PopularDB(APIView):
     def post(self, request):
         userfisio1 = User.objects.create_user(username='fisio1', password='fisio1',
