@@ -10,7 +10,7 @@
         <div class="card-body">
           <h4 class="card-title">{{t.paciente.nome}}</h4>
           <p class="card-text">{{t.condicao}}</p>
-          <a href="#" class="card-link">Detalhes</a>
+          <a href="{% url 'tratamentodetalhe' tratamentoid=t.id %}" class="card-link">Detalhes</a>
           <a href="#" class="card-link">Adicionar avaliação</a>
         </div>
       {% endfor %}

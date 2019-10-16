@@ -252,27 +252,36 @@ class LogoutView(APIView):
 
 class FisioTratamentos(APIView):
     def get(self, request):
-        if request.user.isAuthenticated():
+        if request.user.is_authenticated:
             currentuser = request.user
-            fisio = Fisioterapeuta.objects.get(user=currentuser)
+            fisio = Fisioterapeuta.objects.get(user=currentuser.id)
             list = Tratamento.objects.filter(fisioterapeuta=fisio)
             return render(request, 'fisiotratamentos.html', {'list': list})
         else:
-            return HttpResponse("Não deu certo")
+            return HttpResponse("Algo deu errado, tente novamente")
 
 
 class PacienteTratamentos(APIView):
     def get(self, request):
-        if request.user.isAuthenticated():
-            #fisio = Fisioterapeuta.objects.get(user=request.user)
-            fisio = Fisioterapeuta()
-            for f in Fisioterapeuta.objects.all():
-                if f.user.id==request.user.id:
-                    fisio = f
-            list = Tratamento.objects.filter(fisioterapeuta=fisio)
+        if request.user.is_authenticated:
+            currentuser = request.user
+            paciente = Paciente.objects.get(user=currentuser.id)
+            list = Tratamento.objects.filter(paciente=paciente)
             return render(request, 'pacientetratamentos.html', {'list': list})
         else:
-            return HttpResponse("Não deu certo")
+            return HttpResponse("Algo deu errado, tente novamente")
+
+class TratamentoDetalhe(APIView):
+    def get(self, request, tratamentoid):
+        tratamento = Tratamento.objects.get(id=tratamentoid)
+        sessoes = Sessao.objects.filter(tratamento=tratamento)
+        return render(request, 'tratamentodetalhe.html', {'tratamento': tratamento, 'sessoes': sessoes})
+
+class SessaoDetalhe(APIView):
+    def get(self, request, sessaoid):
+        sessao = Sessao.objects.get(id=sessaoid)
+        tempos = Tempo.objects.filter(sessao=sessao)
+        return render(request, 'sessaodetalhe.html', {'sessao': sessao, 'tempos': tempos})
 
 class PopularDB(APIView):
     def post(self, request):

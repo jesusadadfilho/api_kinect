@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% csrf_token %}
+{% block content %}
+  <h1 class="mt-2">Ver Tratamentos</h1>
+  <hr class="mt-0 mb-4">
+  <div class="container">
+    {% if tratamento %}
+      Este tratamento possui {{ sessoes|length }} sessões:
+      {% for s in sessoes %}
+        <div class="card-body">
+          <h5 class="card-header">{{s.dt_realizada}}</h5>
+          <h4 class="card-title">{{s.exercicio.nome}}</h4>
+          <a href="{% url 'sessaodetalhe' sessaoid=t.id %}" class="card-link">Detalhes da sessão</a>
+        </div>
+      {% endfor %}
+    {% else %}
+      Você não possui tratamentos registrados.
+    {% endif %}
+</div>
+{% endblock %}
