@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+      <h1 class="mt-2">Registrar Avaliação</h1>
+      <hr class="mt-0 mb-4">
+      <p>Você está adicionando uma avaliação ao tratamento de ID: {{tratamento.id}}</p>
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-success">Registrar</button>
+  </form>
+{% endblock %}

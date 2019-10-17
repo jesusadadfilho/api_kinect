@@ -10,9 +10,10 @@
         <p>Seja bem vindo ao sistema da KinectRehab!</p>
         <p>Selecione uma ação:</p>
         <ul>
-          <li><a href="{% url 'registrartratamento' %}">Registrar um novo tratamento</a></li>
+          <li><a href="{% url 'registrartratamento' %}">Registrar um novo tratamento a um paciente(Lista de Pacientes)</a></li>
+          <li><a href="{% url 'registrartratamentoviaid' %}">Registrar um novo tratamento a um paciente(Por ID do Paciente)</a></li>
           <li><a href="{% url 'fisiotratamentos' %}">Ver meus tratamentos</a></li>
-          <li><a href="{% url 'registraravaliacaotratamento' %}">Adicionar avaliação a um tratamento</a></li>
+          <li><a href="{% url 'registraravaliacaotratamento' %}">Adicionar avaliação a um tratamento(Com ID do Tratamento)</a></li>
           <li><a href="{% url 'registrarexercicio' %}">Registrar um novo exercício</a></li>
         </ul>
       </div>

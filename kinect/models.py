@@ -54,4 +54,6 @@ class Sessao(models.Model):
 
 class Tempo(models.Model):
     sessao = models.ForeignKey(Sessao, related_name='tempos', on_delete=models.DO_NOTHING)
-    tempo = models.TextField()
+    tempo = models.FloatField(default=0)
+    toucher = models.TextField(default='Não informado')
+    parteDoCorpo = models.TextField(default='Não informado')

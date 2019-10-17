@@ -33,12 +33,19 @@ class ExercicioForm(forms.Form):
     parteDoCorpo = forms.CharField(label='Parte do Corpo',max_length=100)
 
 class TratamentoForm(forms.Form):
-    fisioterapeuta = forms.ModelChoiceField(label='Fisioterapeuta', queryset=Fisioterapeuta.objects.all(), required=True, help_text='Fisioterapeuta')
-    paciente = forms.ModelChoiceField(label='Paciente', queryset=Paciente.objects.all(), required=True, help_text='Paciente')
+    #fisioterapeuta = forms.ModelChoiceField(label='Fisioterapeuta', queryset=Fisioterapeuta.objects.all(), required=True, help_text='Fisioterapeuta')
+    paciente = forms.ModelChoiceField(label='Paciente', queryset=Paciente.objects.all(), required=True)
+    condicao = forms.CharField(label='Condição', widget=forms.Textarea())
+
+class TratamentoViaIDForm(forms.Form):
+    pacienteid = forms.CharField(label='ID do Paciente', widget=forms.NumberInput(), required=True)
     condicao = forms.CharField(label='Condição', widget=forms.Textarea())
 
 class AvaliacaoForm(forms.Form):
     tratamentoid = forms.CharField(label='ID do Tratamento', max_length=20, widget=forms.NumberInput())
+    avaliacao = forms.CharField(label='Avaliação', widget=forms.Textarea())
+
+class AvaliacaoDiretaForm(forms.Form):
     avaliacao = forms.CharField(label='Avaliação', widget=forms.Textarea())
 
 class LoginForm(forms.Form):

@@ -179,9 +179,10 @@ class RegistrarExercicio(APIView):
 class RegistrarTratamento(APIView):
     def post(self, request):
         form = TratamentoForm(request.POST)
-        if form.is_valid():
+        if form.is_valid() and request.user.is_authenticated:
             form.clean()
-            tratamento = Tratamento(fisioterapeuta=form.cleaned_data['fisioterapeuta'], paciente=form.cleaned_data['paciente'], condicao=form.cleaned_data['condicao'])
+            fisio = Fisioterapeuta.objects.get(user=request.user)
+            tratamento = Tratamento(fisioterapeuta=fisio, paciente=form.cleaned_data['paciente'], condicao=form.cleaned_data['condicao'])
             tratamento.save()
             responsestring = "Tratamento registrado com sucesso.\nO código do tratamento é:"+str(tratamento.id)
             return HttpResponse(responsestring)
@@ -189,6 +190,26 @@ class RegistrarTratamento(APIView):
             return HttpResponse("Algo deu errado.")
     def get(self, request):
         form = TratamentoForm()
+        return render(request, 'registrartratamento.html', {'form':form})
+
+class RegistrarTratamentoViaID(APIView):
+    def post(self, request):
+        form = TratamentoViaIDForm(request.POST)
+        if form.is_valid() and request.user.is_authenticated:
+            form.clean()
+            fisio = Fisioterapeuta.objects.get(user=request.user)
+            if Paciente.objects.filter(id=form.cleaned_data['pacienteid']).exists():
+                paciente = Paciente.objects.get(id=form.cleaned_data['pacienteid'])
+                tratamento = Tratamento(fisioterapeuta=fisio, paciente=paciente, condicao=form.cleaned_data['condicao'])
+                tratamento.save()
+                responsestring = "Tratamento registrado com sucesso.\nO código do tratamento é:"+str(tratamento.id)
+                return HttpResponse(responsestring)
+            else:
+                return HttpResponse("ID fornecida não encontrada entre os pacientes.")
+        else:
+            return HttpResponse("Algo deu errado.")
+    def get(self, request):
+        form = TratamentoViaIDForm()
         return render(request, 'registrartratamento.html', {'form':form})
 
 class RegistrarAvaliacaoTratamento(APIView):
@@ -205,6 +226,27 @@ class RegistrarAvaliacaoTratamento(APIView):
     def get(self, request):
         form = AvaliacaoForm()
         return render(request, 'tratamentoavaliacao.html', {'form':form})
+
+class RegistrarAvaliacaoDireta(APIView):
+    def post(self, request, tratid):
+        form = AvaliacaoDiretaForm(request.POST)
+        if form.is_valid():
+            form.clean()
+            tratamento = Tratamento.objects.get(id=tratid)
+            fisioterapeuta = Fisioterapeuta.objects.get(user=request.user)
+            if fisioterapeuta.is_valid() and tratamento.fisioterapeuta==fisioterapeuta:
+                tratamento.avaliacao = form.cleaned_data['avaliacao']
+                tratamento.save(update_fields=['avaliacao'])
+                return HttpResponse("Tratamento atualizado com sucesso.")
+            else:
+                return HttpResponse("Erro ao obter fisioterapeuta ou o fisioterapeuta logado não é o responsável por esse tratamento.")
+        else:
+            return HttpResponse("Algo deu errado.")
+    def get(self, request, tratid):
+        form = AvaliacaoDiretaForm()
+        tratamento = Tratamento.objects.get(id=tratid)
+        return render(request, 'tratamentoavaliacao.html', {'form':form, 'tratamento':tratamento})
+
 
 class LoginFisio(APIView):
     def post(self, request):
