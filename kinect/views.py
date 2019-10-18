@@ -1,4 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import *
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import Group
 from django.db.models import Subquery
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -18,6 +21,17 @@ from kinect.forms import *
 from kinect.models import *
 from kinect.serializer import *
 
+def paciente_check(user):
+    if user.groups.filter(name='Pacientes'):
+        return True
+    else:
+        return False
+
+def fisio_check(user):
+    if user.groups.filter(name='Fisioterapeutas'):
+        return True
+    else:
+        return False
 
 class PacienteList(APIView):
 
@@ -129,6 +143,10 @@ class CadastroFisio(APIView):
                                    dt_nascimento=form.cleaned_data['dt_nascimento'],
                                    user=user)
             fisio.save()
+            if not Group.objects.get(name='Fisioterapeutas').exists():
+                Group.objects.create(name='Fisioterapeutas')
+            fgroup = Group.objects.get(name='Fisioterapeutas')
+            user.groups.add(fgroup)
             return HttpResponse("Fisioterapeuta cadastrado.")
         else:
             return HttpResponse("Algo deu errado.")
@@ -155,6 +173,10 @@ class CadastroPaciente(APIView):
                                    dt_nascimento=form.cleaned_data['dt_nascimento'],
                                    user=user)
             paciente.save()
+            if not Group.objects.get(name='Pacientes').exists():
+                Group.objects.create(name='Pacientes')
+            pgroup = Group.objects.get(name='Pacientes')
+            user.groups.add(pgroup)
             return HttpResponse("Paciente cadastrado.")
         else:
             return HttpResponse("Algo deu errado.")
@@ -162,7 +184,8 @@ class CadastroPaciente(APIView):
         form = PacienteForm()
         return render(request, 'cadastropaciente.html', {'form': form})
 
-class RegistrarExercicio(APIView):
+#@user_passes_test(fisio_check)
+class RegistrarExercicio(LoginRequiredMixin, APIView):
     def post(self, request):
         form = ExercicioForm(request.POST)
         if form.is_valid():

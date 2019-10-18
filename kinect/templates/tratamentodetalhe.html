@@ -10,7 +10,7 @@
         <div class="card-body">
           <h5 class="card-header">{{s.dt_realizada}}</h5>
           <h4 class="card-title">{{s.exercicio.nome}}</h4>
-          <a href="{% url 'sessaodetalhe' sessaoid=t.id %}" class="card-link">Detalhes da sessão</a>
+          <a href="{% url 'sessaodetalhe' sessaoid=s.id %}" class="card-link">Detalhes da sessão</a>
         </div>
       {% endfor %}
     {% else %}

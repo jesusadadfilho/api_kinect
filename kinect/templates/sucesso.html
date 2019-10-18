@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+      <h1 class="mt-2">Login - Fisioterapeuta</h1>
+      <hr class="mt-0 mb-4">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="alert alert-info">
+          <strong>Operação realizada com sucesso.</strong> <a href="{% url 'index' %}"
+          </div>
+        </div>
+      </div>
+    <button type="submit" class="btn btn-success">Login</button>
+  </form>
+{% endblock %}
