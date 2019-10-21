@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import *
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import Group
 from django.db.models import Subquery
 from django.http import HttpResponse
@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 from django.template import loader
+from django.utils.decorators import *
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
@@ -184,8 +185,9 @@ class CadastroPaciente(APIView):
         form = PacienteForm()
         return render(request, 'cadastropaciente.html', {'form': form})
 
-#@user_passes_test(fisio_check)
-class RegistrarExercicio(LoginRequiredMixin, APIView):
+class RegistrarExercicio(LoginRequiredMixin, UserPassesTestMixin, APIView):
+    def test_func(self):
+        return fisio_check(self.request.user)
     def post(self, request):
         form = ExercicioForm(request.POST)
         if form.is_valid():
@@ -199,7 +201,9 @@ class RegistrarExercicio(LoginRequiredMixin, APIView):
         form = ExercicioForm()
         return render(request, 'registrarexercicio.html', {'form':form})
 
-class RegistrarTratamento(APIView):
+class RegistrarTratamento(LoginRequiredMixin, UserPassesTestMixin, APIView):
+    def test_func(self):
+        return fisio_check(self.request.user)
     def post(self, request):
         form = TratamentoForm(request.POST)
         if form.is_valid() and request.user.is_authenticated:
@@ -215,7 +219,9 @@ class RegistrarTratamento(APIView):
         form = TratamentoForm()
         return render(request, 'registrartratamento.html', {'form':form})
 
-class RegistrarTratamentoViaID(APIView):
+class RegistrarTratamentoViaID(LoginRequiredMixin, UserPassesTestMixin, APIView):
+    def test_func(self):
+        return fisio_check(self.request.user)
     def post(self, request):
         form = TratamentoViaIDForm(request.POST)
         if form.is_valid() and request.user.is_authenticated:
@@ -235,22 +241,30 @@ class RegistrarTratamentoViaID(APIView):
         form = TratamentoViaIDForm()
         return render(request, 'registrartratamento.html', {'form':form})
 
-class RegistrarAvaliacaoTratamento(APIView):
+class RegistrarAvaliacaoTratamento(LoginRequiredMixin, UserPassesTestMixin, APIView):
+    def test_func(self):
+        return fisio_check(self.request.user)
     def post(self, request):
         form = AvaliacaoForm(request.POST)
         if form.is_valid():
             form.clean()
             tratamento = Tratamento.objects.get(id=form.cleaned_data['tratamentoid'])
-            tratamento.avaliacao = form.cleaned_data['avaliacao']
-            tratamento.save(update_fields=['avaliacao'])
-            return HttpResponse("Tratamento atualizado com sucesso.")
+            fisioterapeuta = Fisioterapeuta.objects.get(user=request.user)
+            if fisioterapeuta.is_valid() and tratamento.fisioterapeuta==fisioterapeuta:
+                tratamento.avaliacao = form.cleaned_data['avaliacao']
+                tratamento.save(update_fields=['avaliacao'])
+                return HttpResponse("Tratamento atualizado com sucesso.")
+            else:
+                return HttpResponse("Erro ao obter fisioterapeuta ou o fisioterapeuta logado não é o responsável por esse tratamento.")
         else:
             return HttpResponse("Algo deu errado.")
     def get(self, request):
         form = AvaliacaoForm()
         return render(request, 'tratamentoavaliacao.html', {'form':form})
 
-class RegistrarAvaliacaoDireta(APIView):
+class RegistrarAvaliacaoDireta(LoginRequiredMixin, UserPassesTestMixin, APIView):
+    def test_func(self):
+        return fisio_check(self.request.user)
     def post(self, request, tratid):
         form = AvaliacaoDiretaForm(request.POST)
         if form.is_valid():
@@ -315,7 +329,9 @@ class LogoutView(APIView):
         logout(request)
         return redirect('index')
 
-class FisioTratamentos(APIView):
+class FisioTratamentos(LoginRequiredMixin, UserPassesTestMixin, APIView):
+    def test_func(self):
+        return fisio_check(self.request.user)
     def get(self, request):
         if request.user.is_authenticated:
             currentuser = request.user
@@ -326,7 +342,9 @@ class FisioTratamentos(APIView):
             return HttpResponse("Algo deu errado, tente novamente")
 
 
-class PacienteTratamentos(APIView):
+class PacienteTratamentos(LoginRequiredMixin, UserPassesTestMixin, APIView):
+    def test_func(self):
+        return paciente_check(self.request.user)
     def get(self, request):
         if request.user.is_authenticated:
             currentuser = request.user
@@ -336,19 +354,25 @@ class PacienteTratamentos(APIView):
         else:
             return HttpResponse("Algo deu errado, tente novamente")
 
-class TratamentoDetalhe(APIView):
+class TratamentoDetalhe(LoginRequiredMixin, APIView):
     def get(self, request, tratamentoid):
         tratamento = Tratamento.objects.get(id=tratamentoid)
         sessoes = Sessao.objects.filter(tratamento=tratamento)
-        return render(request, 'tratamentodetalhe.html', {'tratamento': tratamento, 'sessoes': sessoes})
+        if tratamento.fisioterapeuta.user == request.user or tratamento.paciente.user == request.user:
+            return render(request, 'tratamentodetalhe.html', {'tratamento': tratamento, 'sessoes': sessoes})
+        else:
+            return HttpResponse("Você não tem acesso a esse tratamento.")
 
-class SessaoDetalhe(APIView):
+class SessaoDetalhe(LoginRequiredMixin, APIView):
     def get(self, request, sessaoid):
         sessao = Sessao.objects.get(id=sessaoid)
         tempos = Tempo.objects.filter(sessao=sessao)
-        return render(request, 'sessaodetalhe.html', {'sessao': sessao, 'tempos': tempos})
+        if sessao.tratamento.fisioterapeuta.user == request.user or sessao.tratamento.paciente.user == request.user:
+            return render(request, 'sessaodetalhe.html', {'sessao': sessao, 'tempos': tempos})
+        else:
+            return HttpResponse("Você não tem acesso a essa sessão.")
 
-class PopularDB(APIView):
+class PopularDB(LoginRequiredMixin, APIView):
     def post(self, request):
         userfisio1 = User.objects.create_user(username='fisio1', password='fisio1',
                                               email='fisio1@teste.com')  # Fisioterapeuta1User
