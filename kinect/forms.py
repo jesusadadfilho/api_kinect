@@ -21,7 +21,7 @@ class PacienteForm(forms.Form):
     sobrenome = forms.CharField(label='Sobrenome', max_length=100)
     telefone = forms.CharField(label='Telefone',max_length=20)
     cpf = forms.CharField(label='CPF', max_length=20, widget=forms.NumberInput())
-    dt_nascimento = forms.DateField(label='Data de Nascimento (dia-mês-ano)', widget=forms.DateInput())
+    dt_nascimento = forms.DateField(label='Data de Nascimento (ano-mês-dia)', widget=forms.DateInput())
     historico = forms.CharField(label='Histórico')
     genero = forms.ChoiceField(choices=GENDER_CHOICES)
     email = forms.CharField(label='Email', max_length=20, widget=forms.EmailInput())

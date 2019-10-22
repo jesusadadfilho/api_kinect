@@ -143,11 +143,11 @@ class CadastroFisio(APIView):
                                    telefone=form.cleaned_data['telefone'],
                                    dt_nascimento=form.cleaned_data['dt_nascimento'],
                                    user=user)
-            fisio.save()
-            if not Group.objects.get(name='Fisioterapeutas').exists():
+            if not Group.objects.get(name='Fisioterapeutas'):
                 Group.objects.create(name='Fisioterapeutas')
             fgroup = Group.objects.get(name='Fisioterapeutas')
             user.groups.add(fgroup)
+            fisio.save()
             return HttpResponse("Fisioterapeuta cadastrado.")
         else:
             return HttpResponse("Algo deu errado.")
@@ -174,7 +174,7 @@ class CadastroPaciente(APIView):
                                    dt_nascimento=form.cleaned_data['dt_nascimento'],
                                    user=user)
             paciente.save()
-            if not Group.objects.get(name='Pacientes').exists():
+            if not Group.objects.get(name='Pacientes'):
                 Group.objects.create(name='Pacientes')
             pgroup = Group.objects.get(name='Pacientes')
             user.groups.add(pgroup)
