@@ -10,7 +10,7 @@ class FisioterapeutaForm(forms.Form):
     descricao = forms.CharField(label='Descrição', max_length=30)
     telefone = forms.CharField(label='Telefone', max_length=20, widget=forms.NumberInput())
     crm = forms.CharField(label='CRM', max_length=20, widget=forms.NumberInput())
-    dt_nascimento = forms.DateField(label='Data de Nascimento (dia-mês-ano)', widget=forms.DateInput())
+    dt_nascimento = forms.DateField(label='Data de Nascimento (ano-mês-dia)', widget=forms.DateInput())
     username = forms.CharField(label='Nome de Usuário', max_length=20)
     password = forms.CharField(label='Senha', max_length=20, widget=forms.PasswordInput())
     email = forms.CharField(label='Email', max_length=20, widget=forms.EmailInput())
