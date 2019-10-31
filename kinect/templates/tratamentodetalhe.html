@@ -1,20 +1,42 @@
 {% extends 'base.html' %}
 {% csrf_token %}
 {% block content %}
-  <h1 class="mt-2">Ver Tratamentos</h1>
-  <hr class="mt-0 mb-4">
-  <div class="container">
+{% load static %}
+<h1 class="mt-2">Ver Tratamentos</h1>
+<hr class="mt-0 mb-4">
+<div class="container">
     {% if tratamento %}
-      Este tratamento possui {{ sessoes|length }} sessões:
-      {% for s in sessoes %}
-        <div class="card-body">
-          <h5 class="card-header">{{s.dt_realizada}}</h5>
-          <h4 class="card-title">{{s.exercicio.nome}}</h4>
-          <a href="{% url 'sessaodetalhe' sessaoid=s.id %}" class="card-link">Detalhes da sessão</a>
+    Este tratamento possui {{ sessoes|length }} sessões:
+    {% for s in sessoes %}
+    <div class="card-body">
+        <h5 class="card-header">{{s.dt_realizada}}</h5>
+        <h4 class="card-title">{{s.exercicio.nome}}</h4>
+        <a href="{% url 'sessaodetalhe' sessaoid=s.id %}" class="card-link">Detalhes da sessão</a>
+    </div>
+    {% endfor %}
+    <h1 class="mt-2">Gráfico de tempo por sessão:</h1>
+    <hr class="mt-0 mb-4">
+    <div class="row">
+        <div class="col-md-10">
+            <script src="{% static 'js/excanvas.js' %}"></script>
+            <canvas id="myChart" width="500px" height="300px">
+                <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+                <script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
+                <script type="text/javascript">
+            var tratamentoid = "{{tratamentoid}}"
+            $.get('{% url 'sessaographjson' tratamentoid=tratamentoid %}', function(data) {
+                var ctx = $("#myChart").get(0).getContext("2d");
+                new Chart(ctx, {
+                    type: 'line', data: data
+                });
+            });
+            console.log(sessaoid);
+                </script>
+            </canvas>
         </div>
-      {% endfor %}
+    </div>
     {% else %}
-      Você não possui tratamentos registrados.
+    Você não possui tratamentos registrados.
     {% endif %}
 </div>
 {% endblock %}

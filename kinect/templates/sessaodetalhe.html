@@ -1,23 +1,46 @@
 {% extends 'base.html' %}
 {% csrf_token %}
 {% block content %}
-  <h1 class="mt-2">Detalhes da Sessão:</h1>
-  <hr class="mt-0 mb-4">
-  <div class="container">
+{% load static %}
+<h1 class="mt-2">Detalhes da Sessão:</h1>
+<hr class="mt-0 mb-4">
+<div class="container">
     {% if sessao %}
-      <div class="card-body">
+    <div class="card-body">
         <h4 class="card-header">{{sessao.tratamento.paciente.nome}}</h4>
         <h4 class="card-title">{{sessao.exercicio.nome}} - {{sessao.exercicio.parteDoCorpo}}</h4>
         <p class="card-text">Número de objetos tocados: {{ tempos|length }}</p>
         <p class="card-text">Tempos:</p>
         <ul>
-          {% for t in tempos %}
-            <li class="card-text">{{t.tempo}}</li>
-          {% endfor %}
+            {% for t in tempos %}
+            <li class="card-text">{{t.tempo}}s - {{t.parteDoCorpo}}</li>
+            {% endfor %}
         </ul>
-      </div>
+    </div>
+    <h1 class="mt-2">Gráfico de tempo por parte do corpo:</h1>
+    <hr class="mt-0 mb-4">
+    <div class="row">
+        <div class="col-md-10">
+            <script src="{% static 'js/excanvas.js' %}"></script>
+            <canvas id="myChart" width="500px" height="300px">
+                <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+                <script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
+                <script type="text/javascript">
+            var sessaoid = "{{sessaoid}}"
+            $.get('{% url 'tempographjson' sessaoid=sessaoid %}', function(data) {
+                var ctx = $("#myChart").get(0).getContext("2d");
+                new Chart(ctx, {
+                    type: 'line', data: data
+                });
+            });
+            console.log(sessaoid);
+
+                </script>
+            </canvas>
+        </div>
+    </div>
     {% else %}
-      Você não possui tratamentos registrados.
+    Você não possui tratamentos registrados.
     {% endif %}
 </div>
 {% endblock %}

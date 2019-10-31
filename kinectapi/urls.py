@@ -58,7 +58,8 @@ urlpatterns = [
     path('sessaodetalhe/<int:sessaoid>', SessaoDetalhe.as_view(), name='sessaodetalhe'),
     path('chartdemo', TemplateView.as_view(template_name='chartdemo.html'), name='chartdemo'),
     path('line_chart_json', LineChartJSONView.as_view(), name='line_chart_json'),
-    path('testchart/<int:sessaoid>', TemposGraphView.as_view(), name='testchart'), # Mostra template renderizando JSON
+    path('testchart/<int:tratamentoid>', SessaoGraphView.as_view(), name='testchart'), # Mostra template renderizando JSON
     path('tempographjson/<int:sessaoid>', TemposGraphJSONView.as_view(), name='tempographjson'), #Retorna um JSON
+    path('sessaographjson/<int:tratamentoid>', SessaoGraphJSONView.as_view(), name='sessaographjson'),  # Retorna um JSON
 
 ]

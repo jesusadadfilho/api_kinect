@@ -61,5 +61,5 @@ class Tempo(models.Model):
     toucher = models.TextField(default='Não informado')
     parteDoCorpo = models.TextField(default='Não informado')
     def __str__(self):
-        return self.tempo
+        return str(self.tempo)
 

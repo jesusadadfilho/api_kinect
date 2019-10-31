@@ -6,7 +6,7 @@ from django.db.models import Subquery
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from chartjs.views.lines import BaseLineChartView
-from rest_pandas import PandasView
+from rest_pandas import PandasView, PandasSerializer, PandasSimpleView
 
 # Create your views here.
 from django.template import loader
@@ -362,7 +362,7 @@ class TratamentoDetalhe(LoginRequiredMixin, APIView):
         tratamento = Tratamento.objects.get(id=tratamentoid)
         sessoes = Sessao.objects.filter(tratamento=tratamento)
         if tratamento.fisioterapeuta.user == request.user or tratamento.paciente.user == request.user:
-            return render(request, 'tratamentodetalhe.html', {'tratamento': tratamento, 'sessoes': sessoes})
+            return render(request, 'tratamentodetalhe.html', {'tratamento': tratamento, 'sessoes': sessoes, 'tratamentoid':tratamentoid})
         else:
             return HttpResponse("Você não tem acesso a esse tratamento.")
 
@@ -371,14 +371,14 @@ class SessaoDetalhe(LoginRequiredMixin, APIView):
         sessao = Sessao.objects.get(id=sessaoid)
         tempos = Tempo.objects.filter(sessao=sessao)
         if sessao.tratamento.fisioterapeuta.user == request.user or sessao.tratamento.paciente.user == request.user:
-            return render(request, 'sessaodetalhe.html', {'sessao': sessao, 'tempos': tempos})
+            return render(request, 'sessaodetalhe.html', {'sessao': sessao, 'tempos': tempos, 'sessaoid':sessaoid})
         else:
             return HttpResponse("Você não tem acesso a essa sessão.")
 
 class LineChartJSONView(BaseLineChartView):
     def get_labels(self):
         """Return 7 labels for the x-axis."""
-        return ["January", "February", "March", "April", "May", "June", "July"]
+        return []
 
     def get_providers(self):
         """Return names of datasets."""
@@ -399,20 +399,88 @@ class TemposGraphView(APIView):
         return render(request, 'chartdemo.html', {'sessaoid': sessaoid})
 
 class TemposGraphJSONView(BaseLineChartView):
+
     def get_labels(self):
-        print(self.kwargs['sessaoid'])
-        return Tempo.objects.filter(sessao=self.kwargs['sessaoid']).values_list('parteDoCorpo', flat=True).distinct()
+        #return ['1','2','3','4']
+        array = []
+        for label in Tempo.objects.filter(sessao=self.kwargs['sessaoid']).values_list('parteDoCorpo', flat=True).distinct():
+            labelarray = []
+            for t in Tempo.objects.filter(sessao=self.kwargs['sessaoid']):
+                if t.parteDoCorpo == label:
+                    labelarray.append(t.tempo)
+            array.append(labelarray)
+        maxlength = 0
+        for list in array:
+            if len(list)>maxlength:
+                maxlength = len(list)
+        labels = []
+        for i in range(1, maxlength+1):
+            labels.append(i)
+        print(labels)
+        return labels
 
     def get_providers(self):
-        return ["Tempo"]
+        print(Tempo.objects.filter(sessao=self.kwargs['sessaoid']).values_list('parteDoCorpo', flat=True).distinct())
+        return Tempo.objects.filter(sessao=self.kwargs['sessaoid']).values_list('parteDoCorpo', flat=True).distinct()
 
     def get_data(self):
-        return Tempo.objects.filter(sessao=self.kwargs['sessaoid']).values_list('tempo', flat=True).distinct()
+        array = []
+        for label in Tempo.objects.filter(sessao=self.kwargs['sessaoid']).values_list('parteDoCorpo', flat=True).distinct():
+            labelarray = []
+            for t in Tempo.objects.filter(sessao=self.kwargs['sessaoid']):
+                if t.parteDoCorpo == label:
+                    labelarray.append(t.tempo)
+            array.append(labelarray)
+        #tempos = Tempo.objects.filter(sessao=self.kwargs['sessaoid']).distinct()
+        print(array)
+        return array
+
+class SessaoGraphView(APIView):
+    def get(self, request, tratamentoid):
+        return render(request, 'chartdemo.html', {'tratamentoid': tratamentoid})
+
+class SessaoGraphJSONView(BaseLineChartView):
+
+    def get_labels(self):
+        #return ['1','2','3','4']
+        labels = []
+        sessoes = []
+        for sessao in Sessao.objects.filter(tratamento=self.kwargs['tratamentoid']):
+            tempos = []
+            for tempo in Tempo.objects.filter(sessao=sessao):
+                tempos.append(tempo)
+            sessoes.append(tempos)
+        maxlength = 0
+        for sessaotempos in sessoes:
+            if len(sessaotempos)>maxlength:
+                maxlength=len(sessaotempos)
+        for i in range(0, maxlength):
+            labels.append(i)
+        return labels
+
+    def get_providers(self):
+        maxlength = len(Sessao.objects.filter(tratamento=self.kwargs['tratamentoid']).order_by('dt_realizada'))
+        providers = []
+        for i in range(1, maxlength+1):
+            providers.append("Sessão "+str(i))
+        return providers
+
+    def get_data(self):
+        array = []
+        for sessao in Sessao.objects.filter(tratamento=self.kwargs['tratamentoid']).order_by('dt_realizada'):
+            sessaoarray = []
+            for t in Tempo.objects.filter(sessao=sessao):
+                sessaoarray.append(t.tempo)
+            array.append(sessaoarray)
+        print(array)
+        return array
 
 #class TemposGraphView(PandasView):
 #    queryset = Tempo.objects.all()
 #    def filter_queryset(self, queryset):
-#        return queryset
+#        return queryset.filter(sessao=self.kwargs['sessaoid'])
+#    serializer_class = TempoSerializer
+#    pandas_serializer_class = PandasSerializer
 
 
 class PopularDB(LoginRequiredMixin, APIView):
