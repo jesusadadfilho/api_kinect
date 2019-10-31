@@ -5,10 +5,13 @@ from django.contrib.auth.models import Group
 from django.db.models import Subquery
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from chartjs.views.lines import BaseLineChartView
+from rest_pandas import PandasView
 
 # Create your views here.
 from django.template import loader
 from django.utils.decorators import *
+from django.views.generic import TemplateView
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
@@ -371,6 +374,46 @@ class SessaoDetalhe(LoginRequiredMixin, APIView):
             return render(request, 'sessaodetalhe.html', {'sessao': sessao, 'tempos': tempos})
         else:
             return HttpResponse("Você não tem acesso a essa sessão.")
+
+class LineChartJSONView(BaseLineChartView):
+    def get_labels(self):
+        """Return 7 labels for the x-axis."""
+        return ["January", "February", "March", "April", "May", "June", "July"]
+
+    def get_providers(self):
+        """Return names of datasets."""
+        #return ["Central", "Eastside", "Westside"]
+        return ["Média"]
+
+    def get_data(self):
+        """Return 3 datasets to plot."""
+
+        return [[75, 44, 92, 11, 44, 95, 35]]
+
+
+line_chart = TemplateView.as_view(template_name='line_chart.html')
+line_chart_json = LineChartJSONView.as_view()
+
+class TemposGraphView(APIView):
+    def get(self, request, sessaoid):
+        return render(request, 'chartdemo.html', {'sessaoid': sessaoid})
+
+class TemposGraphJSONView(BaseLineChartView):
+    def get_labels(self):
+        print(self.kwargs['sessaoid'])
+        return Tempo.objects.filter(sessao=self.kwargs['sessaoid']).values_list('parteDoCorpo', flat=True).distinct()
+
+    def get_providers(self):
+        return ["Tempo"]
+
+    def get_data(self):
+        return Tempo.objects.filter(sessao=self.kwargs['sessaoid']).values_list('tempo', flat=True).distinct()
+
+#class TemposGraphView(PandasView):
+#    queryset = Tempo.objects.all()
+#    def filter_queryset(self, queryset):
+#        return queryset
+
 
 class PopularDB(LoginRequiredMixin, APIView):
     def post(self, request):

@@ -50,6 +50,9 @@ class Sessao(models.Model):
     #paciente = models.ForeignKey(Paciente, related_name='sessoes', on_delete=models.DO_NOTHING)
     tratamento = models.ForeignKey(Tratamento, related_name='sessoes', on_delete=models.DO_NOTHING)
     exercicio = models.ForeignKey(Exercicio, related_name='sessoes', on_delete=models.DO_NOTHING)
+    def __str__(self):
+        return str(self.dt_realizada)
+
 
 
 class Tempo(models.Model):
@@ -57,3 +60,6 @@ class Tempo(models.Model):
     tempo = models.FloatField(default=0)
     toucher = models.TextField(default='Não informado')
     parteDoCorpo = models.TextField(default='Não informado')
+    def __str__(self):
+        return self.tempo
+
