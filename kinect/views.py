@@ -120,11 +120,20 @@ class MakeSessao(APIView):
 
 class MakeTempo(APIView):
     def post(self, request, sessaoid):
-        tempo = datetime.now()
-        sessao = Sessao.objects.get(id=sessaoid)
-        tempo = Tempo(tempo=tempo, sessao=sessao)
-        tempo.save()
-        serializer_class = TempoSerializer(tempo, many=False)
+        #tempo = datetime.now()
+        #sessao = Sessao.objects.get(id=sessaoid)
+        #tempo = Tempo(tempo=tempo, sessao=sessao)
+        #tempo.save()
+        print(request.data)
+        tempo = request.data['tempo']
+        parteDoCorpo = request.data['parteDoCorpo']
+        sessao =  Sessao.objects.get(id=sessaoid)
+        toucher = request.data['toucher']
+        print(parteDoCorpo)
+        tempoobject = Tempo(tempo=tempo, parteDoCorpo=parteDoCorpo, toucher=toucher, sessao=sessao)
+        serializer_class = TempoSerializer(tempoobject, many=False)
+        tempoobject.save()
+        print(tempoobject)
         return Response(serializer_class.data)
 
 

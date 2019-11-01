@@ -85,8 +85,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'kinectapi.wsgi.application'
 
-
-
+TOKEN_EXPIRED_AFTER_SECONDS = 86400
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
