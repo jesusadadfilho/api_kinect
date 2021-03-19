@@ -5,7 +5,7 @@ coreschema==0.0.4
 Django==2.1.7
 django-chartjs==2.0.0
 django-crispy-forms==1.9.0
-djangorestframework==3.9.1
+djangorestframework==3.11.2
 djangorestframework-simplejwt==4.4.0
 idna==2.9
 itypes==1.2.0
