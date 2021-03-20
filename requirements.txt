@@ -9,7 +9,7 @@ djangorestframework==3.9.1
 djangorestframework-simplejwt==4.4.0
 idna==2.9
 itypes==1.2.0
-Jinja2==2.11.2
+Jinja2==2.11.3
 MarkupSafe==1.1.1
 numpy==1.18.3
 pandas==1.0.3
