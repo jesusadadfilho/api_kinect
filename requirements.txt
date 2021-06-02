@@ -20,4 +20,4 @@ requests==2.23.0
 rest-pandas==1.1.0
 six==1.14.0
 uritemplate==3.0.1
-urllib3==1.25.9
+urllib3==1.26.5
