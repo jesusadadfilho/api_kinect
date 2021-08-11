@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 class Fisioterapeuta(models.Model):
     nome = models.CharField(max_length=100, default='')
-    clinica = models.CharField(max_length=30)
+    clinica = models.CharField(max_length=32)
     descricao = models.CharField(max_length=30)
     telefone = models.CharField(max_length=20)
     crm = models.CharField(max_length=20)
